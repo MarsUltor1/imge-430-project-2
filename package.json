@@ -5,11 +5,12 @@
   "main": "./server/app.js",
   "scripts": {
     "webpack": "webpack",
-    "webpackWatch": "webpack watch",
     "nodemon": "nodemon -e js,html,css --watch ./server --watch ./hosted ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
     "test": "echo \"Tests complete\"",
+    "build": "gulp build",
+    "watch": "gulp watch",
     "heroku-postbuild": "webpack"
   },
   "keywords": [
@@ -18,7 +19,7 @@
     "Redis",
     "Login"
   ],
-  "author": "Cody Van De Mark / Austin Willoughby",
+  "author": "Cody Van De Mark / Austin Willoughby / Mark Grimké",
   "license": "Apache 2.0",
   "devDependencies": {
     "@babel/core": "^7.23.3",
@@ -27,9 +28,15 @@
     "eslint": "^8.36.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.27.5",
+    "gulp": "^4.0.2",
+    "gulp-eslint-new": "^1.8.4",
+    "gulp-nodemon": "^2.5.0",
+    "gulp-sass": "^5.1.0",
     "nodemon": "^2.0.21",
+    "sass": "^1.69.5",
     "webpack": "^5.76.2",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "webpack-stream": "^7.0.0"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",

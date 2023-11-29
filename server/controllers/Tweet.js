@@ -1,25 +1,24 @@
 const models = require('../models');
 
-const { Domo } = models;
+const { Tweet } = models;
 
-const makerPage = async (req, res) => res.render('app');
+const writingPage = async (req, res) => res.render('app');
 
-const makeDomo = async (req, res) => {
-  if (!req.body.name || !req.body.age || !req.body.skill) {
-    return res.status(400).json({ error: 'All fields are required!' });
+const writeTweet = async (req, res) => {
+  if (!req.body.content) {
+    return res.status(400).json({ error: 'Written Content is Required!' });
   }
 
-  const domoData = {
-    name: req.body.name,
-    age: req.body.age,
-    skill: req.body.skill,
+  const tweetData = {
+    username: req.session.account.username,
+    content: req.body.content,
     owner: req.session.account._id,
   };
 
   try {
-    const newDomo = new Domo(domoData);
-    await newDomo.save();
-    return res.status(201).json({ name: newDomo.name, age: newDomo.age, skill: newDomo.skill });
+    const newTweet = new Tweet(tweetData);
+    await newTweet.save();
+    return res.status(201).json({ username: newTweet.username, content: newDomo.age, date: newDomo.skill });
   } catch (err) {
     console.log(err);
     if (err.code === 11000) {

@@ -3,20 +3,15 @@ const _ = require('underscore');
 
 const setName = (name) => _.escape(name).trim();
 
-const DomoSchema = new mongoose.Schema({
-  name: {
+const TweetSchema = new mongoose.Schema({
+  username: {
     type: String,
     required: true,
     trim: true,
     set: setName,
   },
-  age: {
-    type: Number,
-    min: 0,
-    required: true,
-  },
-  skill: {
-    type: Number,
+  content: {
+    type: String,
     min: 0,
     required: true,
   },
@@ -31,10 +26,11 @@ const DomoSchema = new mongoose.Schema({
   },
 });
 
-DomoSchema.statics.toAPI = (doc) => ({
-  name: doc.name,
-  age: doc.age,
+TweetSchema.statics.toAPI = (doc) => ({
+  content: doc.name,
+  username: doc.age,
+  date: doc.createdDate,
 });
 
-const DomoModel = mongoose.model('Domo', DomoSchema);
-module.exports = DomoModel;
+const TweetModel = mongoose.model('Tweet', TweetSchema);
+module.exports = TweetModel;
