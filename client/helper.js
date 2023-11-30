@@ -37,10 +37,20 @@ const sendPost = async (url, data, handler) => {
 
 const hideError = () => {
     document.querySelector('#errorMessage').classList.add('hidden');
-};  
+}; 
+
+// takes date string and turns it into a well formated string for display
+const formatDate = (date) => {
+    let dateArray = date.split('T');
+    let day = dateArray[0].split('-');
+    let time = dateArray[1].split(':');
+
+    return `${day[1]}/${day[2]}/${day[0]} at ${time[0]}:${time[1]}`;
+}
 
 module.exports = {
     handleError,
     sendPost,
     hideError,
+    formatDate,
 }

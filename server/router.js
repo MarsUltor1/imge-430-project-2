@@ -15,6 +15,9 @@ const router = (app) => {
   app.get('/changePassword', mid.requiresLogin, controllers.Account.changePasswordPage);
   app.post('/changePassword', mid.requiresLogin, mid.requiresSecure, controllers.Account.changePassword);
 
+  app.get('/account', mid.requiresLogin, controllers.Account.accountPage);
+  app.get('/accountInfo', mid.requiresLogin, controllers.Account.getInfo);
+
   app.get('/tweet', mid.requiresLogin, controllers.Tweet.writingPage);
   app.post('/tweet', mid.requiresLogin, controllers.Tweet.writeTweet);
 

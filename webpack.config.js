@@ -4,7 +4,7 @@ module.exports = {
     entry: {
         app: './client/maker.jsx',
         login: './client/login.jsx',
-        changePass: './client/changePass.jsx'
+        account: './client/account.jsx'
     },
     module: {
         rules: [

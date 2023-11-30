@@ -47,9 +47,48 @@ const PassChangeWindow = (props) => {
     );
 }
 
+const AccountInfo = (props) => {
+    if (!props.account) {
+        return(
+            <div>
+                <h1>Loading Account...</h1>
+            </div>
+        );
+    }
+
+    return(
+        <div>
+            <h3>Username: {props.account.username}</h3>
+            <h3>User Since: {props.account.date}</h3>
+            <h2>Buy Twitter Premium</h2>
+            <button id="buyPremium">$9.99/m</button>
+            <hr />
+            <button id="changePass">Change Password</button>
+        </div>
+    )
+}
+
+const loadUserInfo = async () => {
+    const response = await fetch('/accountInfo');
+    const data = await response.json();
+    ReactDOM.render(
+        <AccountInfo account={data.info}/>,
+        document.querySelector('#accountInfo')
+    );
+
+    // Don't show password changer until user clicks to change password
+    document.querySelector("#changePass").addEventListener('click', () => {
+        ReactDOM.render(<PassChangeWindow/>,
+            document.querySelector('#changePassword'));
+    })
+}
+
 const init = () => {
-    ReactDOM.render(<PassChangeWindow/>,
-        document.querySelector('#changePassword'));
+    ReactDOM.render(<AccountInfo/>,
+        document.querySelector('#accountInfo'));
+        
+    loadUserInfo();
+    
     return false;
 }
 

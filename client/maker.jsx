@@ -2,13 +2,7 @@ const helper = require('./helper.js');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const formatDate = (date) => {
-    let dateArray = date.split('T');
-    let day = dateArray[0].split('-');
-    let time = dateArray[1].split(':');
 
-    return `${day[1]}/${day[2]}/${day[0]} at ${time[0]}:${time[1]}`;
-}
 
 const handleTweet = (e) => {
     e.preventDefault();
@@ -57,7 +51,7 @@ const TweetList = (props) => {
             <div className="tweet" key={tweet._id}>
                 <h3 className="username">{tweet.username}</h3>
                 <h4 className="content">{tweet.content}</h4>
-                <p className="date">Tweeted: {formatDate(tweet.createdDate)}</p>
+                <p className="date">Tweeted: {helper.formatDate(tweet.createdDate)}</p>
             </div>
         );
     });
