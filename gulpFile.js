@@ -6,7 +6,7 @@ const eslint = require('gulp-eslint-new');
 const webpackConfig = require('./webpack.config.js');
 
 const sassTask = (done) => {
-    gulp.src('./scss/main.scss')
+    gulp.src('./scss/style.scss')
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest('./hosted'));
 

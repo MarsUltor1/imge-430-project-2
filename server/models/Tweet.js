@@ -23,8 +23,8 @@ const TweetSchema = new mongoose.Schema({
 });
 
 TweetSchema.statics.toAPI = (doc) => ({
-  content: doc.name,
-  username: doc.age,
+  content: doc.content,
+  username: doc.username,
   date: doc.createdDate,
 });
 

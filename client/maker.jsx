@@ -2,6 +2,14 @@ const helper = require('./helper.js');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
+const formatDate = (date) => {
+    let dateArray = date.split('T');
+    let day = dateArray[0].split('-');
+    let time = dateArray[1].split(':');
+
+    return `${day[1]}/${day[2]}/${day[0]} at ${time[0]}:${time[1]}`;
+}
+
 const handleTweet = (e) => {
     e.preventDefault();
     helper.hideError();
@@ -25,7 +33,7 @@ const TweetForm = (props) => {
             name="tweetForm"
             action="/tweet"
             method="POST"
-            className="tweetForm"
+            className="tweet-form"
         >
             <label htmlFor="content">Tweet: </label>
             <input type="text" id="tweetContent" name="content" placeholder="Tweet Text"/>
@@ -35,39 +43,38 @@ const TweetForm = (props) => {
     );
 }
 
-const DomoList = (props) => {
-    if (props.domos.length === 0) {
+const TweetList = (props) => {
+    if (props.tweets.length === 0) {
         return (
-            <div className="domoList">
-                <h3 className="emptyDomo">No Domos Yet!</h3>
+            <div className="tweetList">
+                <h3 className="emptyTweet">No Tweets Yet!</h3>
             </div>
         );
     }
 
-    const domoNodes = props.domos.map(domo => {
+    const tweetNodes = props.tweets.map(tweet => {
         return (
-            <div className="domo" key={domo._id}>
-                <img src="/assets/img/domoface.jpeg" alt="domo face" className="domoFace" />
-                <h3 className="domoName"> Name: {domo.name} </h3>
-                <h3 className="domoAge"> Age: {domo.age} </h3>
-                <h3 className="domoSkill"> Skill: {domo.skill} </h3>
+            <div className="tweet" key={tweet._id}>
+                <h3 className="username">{tweet.username}</h3>
+                <h4 className="content">{tweet.content}</h4>
+                <p className="date">Tweeted: {formatDate(tweet.createdDate)}</p>
             </div>
         );
     });
 
     return (
-        <div className="domoList">
-            {domoNodes}
+        <div className="tweetList">
+            {tweetNodes}
         </div>
     );
 }
 
-const loadDomosFromServer = async () => {
-    const response = await fetch('/getDomos');
+const loadTweetsFromServer = async () => {
+    const response = await fetch('/getTweets');
     const data = await response.json();
     ReactDOM.render(
-        <DomoList domos={data.domos} />,
-        document.querySelector('#domos')
+        <TweetList tweets={data.tweets} />,
+        document.querySelector('#tweets')
     );
 }
 
@@ -78,11 +85,11 @@ const init = () => {
     );
 
     ReactDOM.render(
-        <DomoList domos={[]}/>,
+        <TweetList tweets={[]}/>,
         document.querySelector('#tweets')
     );
 
-    loadDomosFromServer();
+    loadTweetsFromServer();
 }
 
 window.onload = init;

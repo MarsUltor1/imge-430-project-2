@@ -1,0 +1,3 @@
+flip order of tweets (newest at the top)
+have two seperate tabs, one for your tweets one for all tweets
+implement socket to get updates when other people tweet
