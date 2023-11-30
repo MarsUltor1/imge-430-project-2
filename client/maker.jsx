@@ -2,43 +2,35 @@ const helper = require('./helper.js');
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const handleDomo = (e) => {
+const handleTweet = (e) => {
     e.preventDefault();
     helper.hideError();
 
-    const name = e.target.querySelector('#domoName').value;
-    const age = e.target.querySelector('#domoAge').value;
-    const skill = e.target.querySelector('#domoSkill').value;
+    const content = e.target.querySelector('#tweetContent').value;
 
-    if (!name || !age || !skill) {
-        helper.handleError('All fields are required!');
+    if (!content) {
+        helper.handleError('Tweet cannot be empty!');
         return false;
     }
 
-    helper.sendPost(e.target.action, {name, age, skill}, loadDomosFromServer);
+    helper.sendPost(e.target.action, {content}, loadTweetsFromServer);
 
     return false;
 }
 
-const DomoForm = (props) => {
+const TweetForm = (props) => {
     return (
-        <form id="domoForm"
-            onSubmit={handleDomo}
-            name="domoForm"
-            action="/maker"
+        <form id="tweetForm"
+            onSubmit={handleTweet}
+            name="tweetForm"
+            action="/tweet"
             method="POST"
-            className="domoForm"
+            className="tweetForm"
         >
-            <label htmlFor="name">Name: </label>
-            <input type="text" id="domoName" name="name" placeholder="Domo Name"/>
+            <label htmlFor="content">Tweet: </label>
+            <input type="text" id="tweetContent" name="content" placeholder="Tweet Text"/>
 
-            <label htmlFor="age">Age: </label>
-            <input id="domoAge" type="number" min="0" name="age"/>
-            
-            <label htmlFor="skill">Skill: </label>
-            <input id="domoSkill" type="number" min="0" name="skill"/>
-
-            <input type="submit" className="makeDomoSubmit" value="Make Domo"/>
+            <input type="submit" className="writeTweetSubmit" value="Tweet"/>
         </form>
     );
 }
@@ -81,13 +73,13 @@ const loadDomosFromServer = async () => {
 
 const init = () => {
     ReactDOM.render(
-        <DomoForm/>,
-        document.querySelector('#makeDomo')
+        <TweetForm/>,
+        document.querySelector('#writeTweet')
     );
 
     ReactDOM.render(
         <DomoList domos={[]}/>,
-        document.querySelector('#domos')
+        document.querySelector('#tweets')
     );
 
     loadDomosFromServer();

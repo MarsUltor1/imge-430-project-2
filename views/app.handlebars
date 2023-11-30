@@ -4,24 +4,31 @@
   <title>DomoMaker</title>
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
 </head>
 <body>
-  <nav><a href="/login"><img id="logo" src="/assets/img/face.png" alt="face logo"/></a>
-    <div class="navlink"><a href="/logout">Log out</a></div>
-    <div class="navlink"><a href="/changePassword">Change Password</a></div>
-  </nav>
+  <div class="columns">
+    <div class="column" id="nav">
+      <div class="nav-button"><a href="/logout">Logout</a></div>
+      <div class="nav-button"><a href="/Account">Account</a></div>
+    </div>
 
-  <section id="makeDomo">
+    <div class="column is-half">
+      <div id="writeTweet">
 
-  </section>
-  <section id="domos">
-    
-  </section>
+      </div>
 
-  <div id="domoMessage" class='hidden'>
-    <img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3>
-    <img id="domo" src="assets/img/domo.png" alt="domo"/>
+      <div class="hidden" id="errorMessage"></div>
+      <hr>
+
+      <div id="tweets">
+
+      </div>
+    </div>
+
+    <div class="column">
+
+    </div>
   </div>
   <script src="/assets/appBundle.js"></script>
 </body>

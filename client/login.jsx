@@ -84,17 +84,20 @@ const init = () => {
     const loginButton = document.querySelector('#loginButton');
     const signupButton = document.querySelector('#signupButton');
 
+    ReactDOM.render(<LoginWindow />,
+            document.querySelector('#login'));
+
     loginButton.addEventListener('click', (e) => {
         e.preventDefault();
         ReactDOM.render(<LoginWindow />,
-            document.querySelector('#content'));
+            document.querySelector('#login'));
         return false;
     });
 
     signupButton.addEventListener('click', (e) => {
         e.preventDefault();
         ReactDOM.render(<SignupWindow />,
-            document.querySelector('#content'));
+            document.querySelector('#login'));
         return false;
     });
 }
