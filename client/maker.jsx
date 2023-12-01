@@ -9,11 +9,14 @@ const handleTweet = (e) => {
     helper.hideError();
 
     const content = e.target.querySelector('#tweetContent').value;
-
+    
     if (!content) {
         helper.handleError('Tweet cannot be empty!');
         return false;
     }
+
+    // clear tweet box
+    e.target.querySelector('#tweetContent').value = '';
 
     helper.sendPost(e.target.action, {content}, loadTweetsFromServer);
 
