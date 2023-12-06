@@ -75,6 +75,41 @@ const loadTweetsFromServer = async () => {
     );
 }
 
+const AllTweetList = (props) => {
+    if (props.tweets.length === 0) {
+        return (
+            <div className="tweetList">
+                <h3 className="emptyTweet">No Tweets Yet!</h3>
+            </div>
+        );
+    }
+
+    const tweetNodes = props.tweets.map(tweet => {
+        return (
+            <div className="tweet" key={tweet._id}>
+                <h3 className="username">{tweet.username}</h3>
+                <h4 className="content">{tweet.content}</h4>
+                <p className="date">Tweeted: {helper.formatDate(tweet.createdDate)}</p>
+            </div>
+        );
+    });
+
+    return (
+        <div className="tweetList">
+            {tweetNodes}
+        </div>
+    );
+}
+
+const loadAllTweetsFromServer = async () => {
+    const response = await fetch('/getAllTweets');
+    const data = await response.json();
+    ReactDOM.render(
+        <AllTweetList tweets={data.tweets} />,
+        document.querySelector('#tweets')
+    );
+}
+
 const init = () => {
     ReactDOM.render(
         <TweetForm/>,
@@ -87,6 +122,33 @@ const init = () => {
     );
 
     loadTweetsFromServer();
+
+    const myTweetsBtn = document.querySelector('#myTweetsBtn');
+    const allTweetsBtn = document.querySelector('#allTweetsBtn');
+
+    ReactDOM.render(
+        <TweetForm/>,
+        document.querySelector('#writeTweet')
+    );
+
+    ReactDOM.render(
+        <TweetList tweets={[]}/>,
+        document.querySelector('#tweets')
+    );
+
+    loadTweetsFromServer();
+
+    myTweetsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadTweetsFromServer();
+        return false;
+    });
+
+    allTweetsBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadAllTweetsFromServer();
+        return false;
+    });
 }
 
 window.onload = init;
