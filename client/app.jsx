@@ -9,16 +9,17 @@ const handleTweet = (e) => {
     helper.hideError();
 
     const content = e.target.querySelector('#tweetContent').value;
-    
+
     if (!content) {
         helper.handleError('Tweet cannot be empty!');
         return false;
     }
 
+    
     // clear tweet box
     e.target.querySelector('#tweetContent').value = '';
 
-    helper.sendPost(e.target.action, {content}, loadTweetsFromServer);
+    helper.sendPost(e.target.action, { content }, loadTweetsFromServer);
 
     return false;
 }
@@ -33,9 +34,9 @@ const TweetForm = (props) => {
             className="tweet-form"
         >
             <label htmlFor="content">Tweet: </label>
-            <input type="text" id="tweetContent" name="content" placeholder="Tweet Text"/>
+            <input type="text" id="tweetContent" name="content" placeholder="Tweet Text" />
 
-            <input type="submit" className="writeTweetSubmit" value="Tweet"/>
+            <input type="submit" className="writeTweetSubmit" value="Tweet" />
         </form>
     );
 }
@@ -110,33 +111,46 @@ const loadAllTweetsFromServer = async () => {
     );
 }
 
+const SponsoredTweet = (props) => {
+    return (
+        <div className="tweet" key={props.tweet.id}>
+            <h3 className="username">{props.tweet.username}</h3>
+            <h4 className="content">{props.tweet.content}</h4>
+            <p className="date">Tweeted: {props.tweet.date}</p>
+        </div>
+    );
+}
+
 const init = () => {
+    // Render the tweet writer
     ReactDOM.render(
-        <TweetForm/>,
+        <TweetForm />,
         document.querySelector('#writeTweet')
     );
-
+    
+    // Render out the sponsored tweet
     ReactDOM.render(
-        <TweetList tweets={[]}/>,
+        <SponsoredTweet tweet={{
+            id: "sponsorTweet",
+            username: "Sponsor",
+            content: "Placeholder for a paid tweet, will show up at the top of every feed",
+            date: "12/8/2023 at 13:07"
+        }} />,
+        document.querySelector('#sponsorDiv')
+    );
+
+    // Render out user tweets
+    ReactDOM.render(
+        <TweetList tweets={[]} />,
         document.querySelector('#tweets')
     );
 
+    // Fill in all the stored tweets
     loadTweetsFromServer();
 
+    // Setup buttons to switch between feeds
     const myTweetsBtn = document.querySelector('#myTweetsBtn');
     const allTweetsBtn = document.querySelector('#allTweetsBtn');
-
-    ReactDOM.render(
-        <TweetForm/>,
-        document.querySelector('#writeTweet')
-    );
-
-    ReactDOM.render(
-        <TweetList tweets={[]}/>,
-        document.querySelector('#tweets')
-    );
-
-    loadTweetsFromServer();
 
     myTweetsBtn.addEventListener('click', (e) => {
         e.preventDefault();
