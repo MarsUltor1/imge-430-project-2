@@ -13,6 +13,8 @@ const redis = require('redis');
 
 const router = require('./router.js');
 
+const socketSetup = require('./io.js');
+
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
 const dbURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1/Project-2';
@@ -54,7 +56,9 @@ redisClient.connect().then(() => {
 
   router(app);
 
-  app.listen(port, (err) => {
+  const server = socketSetup(app);
+
+  server.listen(port, (err) => {
     if (err) {
       throw err;
     }

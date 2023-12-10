@@ -110,10 +110,14 @@ const makePremium = (e) => {
     helper.sendPost('/getPremium', {}, () => {
         helper.hideById('premium');
         helper.showById('premiumOwned');
+        helper.sendChangeNotification();
     })
 }
 
 const init = async () => {
+    // make sure user isn't listening for socket changes of this page
+    helper.socket.off('tweetchange');
+
     ReactDOM.render(<AccountInfo />,
         document.querySelector('#accountInfo'));
 

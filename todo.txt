@@ -1,3 +1,2 @@
-flip order of tweets (newest at the top)
-have two seperate tabs, one for your tweets one for all tweets
-implement socket to get updates when other people tweet
+- random error when the server just starts and client reloads doing a public private toggle will usually throw an error
+- socket gets out of sync making it so that sometimes when a tweet is privated it will show up and when it is publicised it will disapear

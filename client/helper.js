@@ -1,15 +1,13 @@
-/* Takes in an error message. Sets the error message up in html, and
-   displays it to the user. Will be hidden by other events that could
-   end in an error.
-*/
+const socket = io();
+
+// Display error message in the error message element
 const handleError = (message) => {
     document.getElementById('errorMessage').textContent = message;
     document.getElementById('errorMessage').classList.remove('hidden');
 };
 
-/* Sends post requests to the server using fetch. Will look for various
-   entries in the response JSON object, and will handle them appropriately.
-*/
+// send a post request to the given url with data in the body
+// call the handler on completion if there is one
 const sendPost = async (url, data, handler) => {
     const response = await fetch(url, {
         method: 'POST',
@@ -35,6 +33,7 @@ const sendPost = async (url, data, handler) => {
     }
 };
 
+// hide any error messages
 const hideError = () => {
     document.querySelector('#errorMessage').classList.add('hidden');
 }; 
@@ -48,13 +47,19 @@ const formatDate = (date) => {
     return `${day[1]}/${day[2]}/${day[0]} at ${time[0]}:${time[1]}`;
 }
 
+// hide element with given id
 const hideById = (id) => {
     document.getElementById(id).classList.add('hidden');
     console.log('element hidden');
 }
 
+// show element with given id
 const showById = (id) => {
     document.getElementById(id).classList.remove('hidden');
+}
+
+const sendChangeNotification = () => {
+    socket.emit('tweet change');
 }
 
 module.exports = {
@@ -64,4 +69,6 @@ module.exports = {
     formatDate,
     hideById,
     showById,
+    sendChangeNotification,
+    socket,
 }

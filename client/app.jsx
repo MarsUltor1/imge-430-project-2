@@ -42,17 +42,24 @@ const TweetForm = (props) => {
     );
 }
 
-const togglePrivacy = (e) => {
+const togglePrivacy = async (e) => {
     helper.hideError();
     // Send post request to server to change privacy of given tweet
-    console.log(e.target.id)
-    helper.sendPost('/togglePrivacy', { id: e.target.id }, loadTweetsFromServer);
+    await helper.sendPost('/togglePrivacy', { id: e.target.id }, () => {
+        loadTweetsFromServer();
+        helper.sendChangeNotification();
+    });
+    
 }
 
-const deleteTweet = (e) => {
+const deleteTweet = async (e) => {
     helper.hideError();
     // Send delete post reqest to server
-    helper.sendPost('/deleteTweet', {id: e.target.id}, loadTweetsFromServer);
+    await helper.sendPost('/deleteTweet', {id: e.target.id}, () => {
+        loadTweetsFromServer();
+        helper.sendChangeNotification();
+    });
+    
 }
 
 const TweetList = (props) => {
@@ -78,7 +85,7 @@ const TweetList = (props) => {
                     <nav className="field has-addons">
                         <p class="control">
                             <button className="button is-small" id="privacyBtn">
-                                <span id={tweet._id}>{tweet.public ? 'Private' : 'Make Public'}</span>
+                                <span id={tweet._id}>{tweet.public ? 'Make Private' : 'Make Public'}</span>
                             </button>
                         </p>
                         <p class="control">
@@ -102,7 +109,7 @@ const TweetList = (props) => {
                     <nav className="field has-addons">
                         <p class="control">
                             <button className="button is-small" id="privacyBtn">
-                                <span id={tweet._id}>{tweet.public ? 'Private' : 'Make Public'}</span>
+                                <span id={tweet._id}>{tweet.public ? 'Make Private' : 'Make Public'}</span>
                             </button>
                         </p>
                         <p class="control">
@@ -237,6 +244,9 @@ const SponsoredTweet = (props) => {
 }
 
 const init = async () => {
+    // stop listening for socket changes
+    helper.socket.off('tweet change');
+
     // Render the tweet writer
     ReactDOM.render(
         <TweetForm />,
@@ -270,12 +280,18 @@ const init = async () => {
     myTweetsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         loadTweetsFromServer();
+
+        // stop listening for socket changes
+        helper.socket.off('tweet change');
         return false;
     });
 
     allTweetsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         loadAllTweetsFromServer();
+
+        // start listening for socket changes
+        helper.socket.on('tweet change', loadAllTweetsFromServer);
         return false;
     });
 }

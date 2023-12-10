@@ -81,6 +81,9 @@ const SignupWindow = (props) => {
 }
 
 const init = () => {
+    // make sure user isn't listening for socket changes of this page
+    helper.socket.off('tweetchange');
+
     const loginButton = document.querySelector('#loginButton');
     const signupButton = document.querySelector('#signupButton');
 
