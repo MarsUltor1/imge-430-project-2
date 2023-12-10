@@ -24,6 +24,7 @@ const router = (app) => {
   app.post('/tweet', mid.requiresLogin, controllers.Tweet.writeTweet);
 
   app.post('/togglePrivacy', mid.requiresLogin, controllers.Tweet.togglePrivacy);
+  app.post('/deleteTweet', mid.requiresLogin, controllers.Tweet.deleteTweet);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

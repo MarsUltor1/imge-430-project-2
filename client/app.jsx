@@ -17,7 +17,7 @@ const handleTweet = (e) => {
 
 
     // clear tweet box
-    e.target.querySelector('#privacyBtn').value = '';
+    e.target.querySelector('#tweetContent').value = '';
 
     helper.sendPost(e.target.action, { content }, loadTweetsFromServer);
 
@@ -43,11 +43,14 @@ const TweetForm = (props) => {
 }
 
 const togglePrivacy = (e) => {
+    helper.hideError();
     // Send post request to server to change privacy of given tweet
+    console.log(e.target.id)
     helper.sendPost('/togglePrivacy', { id: e.target.id }, loadTweetsFromServer);
 }
 
 const deleteTweet = (e) => {
+    helper.hideError();
     // Send delete post reqest to server
     helper.sendPost('/deleteTweet', {id: e.target.id}, loadTweetsFromServer);
 }
@@ -79,8 +82,8 @@ const TweetList = (props) => {
                             </button>
                         </p>
                         <p class="control">
-                            <button className="button is-small" id="delete" value={tweet._id}>
-                                <span>Delete</span>
+                            <button className="button is-small" id="deleteBtn">
+                                <span id={tweet._id}>Delete</span>
                             </button>
                         </p>
                     </nav>
@@ -103,8 +106,8 @@ const TweetList = (props) => {
                             </button>
                         </p>
                         <p class="control">
-                            <button className="button is-small" id="delete" value={tweet._id}>
-                                <span>Delete</span>
+                            <button className="button is-small" id="deleteBtn" value={tweet._id}>
+                                <span id={tweet._id}>Delete</span>
                             </button>
                         </p>
                     </nav>
@@ -136,7 +139,7 @@ const loadTweetsFromServer = async () => {
         document.querySelector('#tweets')
     );
 
-    // Make sure all privacy buttons are setup
+    // Setup all privacy buttons
     const privacyBtns = document.querySelectorAll('#privacyBtn');
 
     privacyBtns.forEach((btn) => {
@@ -145,6 +148,17 @@ const loadTweetsFromServer = async () => {
 
         // Setup event listener to toggle the privacy
         btn.addEventListener('click', togglePrivacy);
+    })
+
+    // Setup all delete buttons
+    const deleteBtns = document.querySelectorAll('#deleteBtn');
+
+    deleteBtns.forEach((btn) => {
+        //remove old event listener
+        btn.removeEventListener('click', deleteTweet);
+
+        // Add new event listener
+        btn.addEventListener('click', deleteTweet);
     })
 }
 
