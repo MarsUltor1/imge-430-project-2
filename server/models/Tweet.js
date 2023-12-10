@@ -15,6 +15,10 @@ const TweetSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  public: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 TweetSchema.statics.toAPI = (doc) => ({

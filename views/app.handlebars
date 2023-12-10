@@ -1,11 +1,16 @@
 <html lang="en">
+
 <head>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8" />
   <title>Twitter</title>
-  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
-  <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="shortcut icon" href="/assets/img/favicon.png" />
+  <link rel="stylesheet" type="text/css" href="/assets/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
+
 <body>
   <div class="columns">
     <div class="column" id="nav">
@@ -16,18 +21,20 @@
     </div>
 
     <div class="column is-half">
-      <div id="writeTweet">
+      <div id="writingSection">
+        <div class="block" id="writeTweet">
+
+        </div>
+
+        <div class="hidden" id="errorMessage"></div>
+        <hr>
+      </div>
+
+      <div class="block" id="sponsorDiv">
 
       </div>
 
-      <div class="hidden" id="errorMessage"></div>
-      <hr>
-
-      <div id="sponsorDiv">
-
-      </div>
-
-      <div id="tweets">
+      <div class="block" id="tweets">
 
       </div>
     </div>
@@ -38,4 +45,5 @@
   </div>
   <script src="/assets/appBundle.js"></script>
 </body>
+
 </html>

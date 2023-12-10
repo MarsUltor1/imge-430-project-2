@@ -101,11 +101,12 @@ const accountPage = (req, res) => res.render('account');
 const getInfo = async (req, res) => {
   try {
     const user = await Account.findOne({ _id: req.session.account._id })
-      .select('username createdDate').lean().exec();
+      .select('username premium createdDate').lean().exec();
 
     const userInfo = {
       username: user.username,
       date: user.createdDate,
+      premium: user.premium,
     };
 
     return res.json({ info: userInfo });
@@ -114,6 +115,20 @@ const getInfo = async (req, res) => {
     return res.status(500).json({ error: 'Error while retrieving account info!' });
   }
 };
+
+const makePremium = async (req, res) => {
+  try {
+    // Change premium boolean in user info
+    const user = { _id: req.session.account._id };
+    await Account.updateOne(user, { $set: { premium: true } });
+
+    return res.json({success: 'Premium Purchased'});
+  }
+  catch (err) {
+    console.log(err);
+    return res.status(500).json({error: 'Error while updating premium status'})
+  }
+}
 
 module.exports = {
   loginPage,
@@ -124,4 +139,5 @@ module.exports = {
   changePassword,
   accountPage,
   getInfo,
+  makePremium,
 };

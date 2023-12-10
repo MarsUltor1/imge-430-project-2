@@ -15,9 +15,9 @@ const handleTweet = (e) => {
         return false;
     }
 
-    
+
     // clear tweet box
-    e.target.querySelector('#tweetContent').value = '';
+    e.target.querySelector('#privacyBtn').value = '';
 
     helper.sendPost(e.target.action, { content }, loadTweetsFromServer);
 
@@ -26,19 +26,30 @@ const handleTweet = (e) => {
 
 const TweetForm = (props) => {
     return (
+
+
         <form id="tweetForm"
             onSubmit={handleTweet}
             name="tweetForm"
             action="/tweet"
             method="POST"
-            className="tweet-form"
+            className="tweet-form box"
         >
-            <label htmlFor="content">Tweet: </label>
-            <input type="text" id="tweetContent" name="content" placeholder="Tweet Text" />
-
-            <input type="submit" className="writeTweetSubmit" value="Tweet" />
+            <label className="label">Tweet</label>
+            <input type="text" id="tweetContent" className="input is-small" placeholer="Tweet Content" />
+            <input type="submit" className="button is-small" value="Tweet" />
         </form>
     );
+}
+
+const togglePrivacy = (e) => {
+    // Send post request to server to change privacy of given tweet
+    helper.sendPost('/togglePrivacy', { id: e.target.id }, loadTweetsFromServer);
+}
+
+const deleteTweet = (e) => {
+    // Send delete post reqest to server
+    helper.sendPost('/deleteTweet', {id: e.target.id}, loadTweetsFromServer);
 }
 
 const TweetList = (props) => {
@@ -51,14 +62,59 @@ const TweetList = (props) => {
     }
 
     const tweetNodes = props.tweets.map(tweet => {
-        return (
-            <div className="tweet" key={tweet._id}>
-                <h3 className="username">{tweet.username}</h3>
-                <h4 className="content">{tweet.content}</h4>
-                <p className="date">Tweeted: {helper.formatDate(tweet.createdDate)}</p>
-            </div>
-        );
+        // Check if user has bought premium
+        if (tweet.premium) {
+            // If premium user add check mark
+            return (
+                <div className="tweet box" key={tweet._id}>
+                    <p>
+                        <strong>{tweet.username} <span className="icon"><i className="fas fa-solid fa-square-check"></i></span></strong><small>{helper.formatDate(tweet.createdDate)}</small>
+                        <br></br>
+                        {tweet.content}
+                    </p>
+                    <nav className="field has-addons">
+                        <p class="control">
+                            <button className="button is-small" id="privacyBtn">
+                                <span id={tweet._id}>{tweet.public ? 'Private' : 'Make Public'}</span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button className="button is-small" id="delete" value={tweet._id}>
+                                <span>Delete</span>
+                            </button>
+                        </p>
+                    </nav>
+                </div>
+            );
+        }
+        else {
+            // Don't include check if user is not premium
+            return (
+                <div className="tweet box" key={tweet._id}>
+                    <p>
+                        <strong>{tweet.username} <span className="icon"></span></strong><small>{helper.formatDate(tweet.createdDate)}</small>
+                        <br></br>
+                        {tweet.content}
+                    </p>
+                    <nav className="field has-addons">
+                        <p class="control">
+                            <button className="button is-small" id="privacyBtn">
+                                <span id={tweet._id}>{tweet.public ? 'Private' : 'Make Public'}</span>
+                            </button>
+                        </p>
+                        <p class="control">
+                            <button className="button is-small" id="delete" value={tweet._id}>
+                                <span>Delete</span>
+                            </button>
+                        </p>
+                    </nav>
+                </div>
+            );
+        }
     });
+
+    // Reverse tweets so that newest tweets are on top
+    tweetNodes.reverse();
 
     return (
         <div className="tweetList">
@@ -70,10 +126,26 @@ const TweetList = (props) => {
 const loadTweetsFromServer = async () => {
     const response = await fetch('/getTweets');
     const data = await response.json();
+
+    // Make sure the tweet form is visible
+    helper.showById('writingSection');
+
+    // Render out all the tweets
     ReactDOM.render(
         <TweetList tweets={data.tweets} />,
         document.querySelector('#tweets')
     );
+
+    // Make sure all privacy buttons are setup
+    const privacyBtns = document.querySelectorAll('#privacyBtn');
+
+    privacyBtns.forEach((btn) => {
+        // Remove any old event listeners that may or may not exist
+        btn.removeEventListener('click', togglePrivacy);
+
+        // Setup event listener to toggle the privacy
+        btn.addEventListener('click', togglePrivacy);
+    })
 }
 
 const AllTweetList = (props) => {
@@ -85,15 +157,37 @@ const AllTweetList = (props) => {
         );
     }
 
+    // Setup the structure of each tweet
     const tweetNodes = props.tweets.map(tweet => {
-        return (
-            <div className="tweet" key={tweet._id}>
-                <h3 className="username">{tweet.username}</h3>
-                <h4 className="content">{tweet.content}</h4>
-                <p className="date">Tweeted: {helper.formatDate(tweet.createdDate)}</p>
-            </div>
-        );
+        // Check if user has bought premium
+        if (tweet.premium) {
+            // If premium user add check mark
+            return (
+                <div className="tweet box" key={tweet._id}>
+                    <p>
+                        <strong>{tweet.username} <span className="icon"><i className="fas fa-solid fa-square-check"></i></span></strong><small>{helper.formatDate(tweet.createdDate)}</small>
+                        <br></br>
+                        {tweet.content}
+                    </p>
+                </div>
+            );
+        }
+        else {
+            // Don't include check if user is not premium
+            return (
+                <div className="tweet box" key={tweet._id}>
+                    <p>
+                        <strong>{tweet.username} <span className="icon"></span></strong><small>{helper.formatDate(tweet.createdDate)}</small>
+                        <br></br>
+                        {tweet.content}
+                    </p>
+                </div>
+            );
+        }
     });
+
+    // Reverse order of tweets so that newest is shown first
+    tweetNodes.reverse();
 
     return (
         <div className="tweetList">
@@ -105,6 +199,11 @@ const AllTweetList = (props) => {
 const loadAllTweetsFromServer = async () => {
     const response = await fetch('/getAllTweets');
     const data = await response.json();
+
+    // Make sure the tweet form is hidden
+    helper.hideById('writingSection');
+
+    // Render out all the tweets
     ReactDOM.render(
         <AllTweetList tweets={data.tweets} />,
         document.querySelector('#tweets')
@@ -113,21 +212,23 @@ const loadAllTweetsFromServer = async () => {
 
 const SponsoredTweet = (props) => {
     return (
-        <div className="tweet" key={props.tweet.id}>
-            <h3 className="username">{props.tweet.username}</h3>
-            <h4 className="content">{props.tweet.content}</h4>
-            <p className="date">Tweeted: {props.tweet.date}</p>
+        <div className="tweet box" key={props.tweet.id}>
+            <p>
+                <strong>{props.tweet.username} <span className="icon"></span></strong><small>{props.tweet.date}</small>
+                <br></br>
+                {props.tweet.content}
+            </p>
         </div>
     );
 }
 
-const init = () => {
+const init = async () => {
     // Render the tweet writer
     ReactDOM.render(
         <TweetForm />,
         document.querySelector('#writeTweet')
     );
-    
+
     // Render out the sponsored tweet
     ReactDOM.render(
         <SponsoredTweet tweet={{
@@ -146,7 +247,7 @@ const init = () => {
     );
 
     // Fill in all the stored tweets
-    loadTweetsFromServer();
+    await loadTweetsFromServer();
 
     // Setup buttons to switch between feeds
     const myTweetsBtn = document.querySelector('#myTweetsBtn');

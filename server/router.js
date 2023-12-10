@@ -18,8 +18,12 @@ const router = (app) => {
   app.get('/account', mid.requiresLogin, controllers.Account.accountPage);
   app.get('/accountInfo', mid.requiresLogin, controllers.Account.getInfo);
 
+  app.post('/getPremium', mid.requiresLogin, controllers.Account.makePremium);
+
   app.get('/tweet', mid.requiresLogin, controllers.Tweet.writingPage);
   app.post('/tweet', mid.requiresLogin, controllers.Tweet.writeTweet);
+
+  app.post('/togglePrivacy', mid.requiresLogin, controllers.Tweet.togglePrivacy);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 };

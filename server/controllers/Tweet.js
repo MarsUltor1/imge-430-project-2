@@ -40,7 +40,7 @@ const getTweets = async (req, res) => {
 
     // Get the tweets
     const docs = await Tweet.find({ owner: req.session.account._id })
-      .select('content createdDate').lean().exec();
+      .select('content createdDate public').lean().exec();
 
     // Get user information
     const owner = await Account.find({ _id: req.session.account._id })
@@ -51,8 +51,10 @@ const getTweets = async (req, res) => {
       resJson.tweets.push({
         content: tweet.content,
         createdDate: tweet.createdDate,
+        _id: tweet._id,
         username: owner[0].username,
         premium: owner[0].premium,
+        public: tweet.public,
       });
     });
 
@@ -72,27 +74,30 @@ const getAllTweets = async (req, res) => {
 
     // Get the tweets
     const docs = await Tweet.find()
-      .select('owner content createdDate').lean().exec();
-    console.log(docs);
+      .select('owner content createdDate public').lean().exec();
 
     const promises = [];
 
     for (let i = 0, end = docs.length; i < end; i++) {
-      // Get user info for current tweet
-      const ownerPromise = Account.find({ _id: docs[i].owner })
-        .select('username premium').lean().exec();
+      // Check that the tweet is public
+      if (docs[i].public) {
+        // Get user info for current tweet
+        const ownerPromise = Account.find({ _id: docs[i].owner })
+          .select('username premium').lean().exec();
 
-      promises.push(ownerPromise);
+        promises.push(ownerPromise);
 
-      ownerPromise.then((owner) => {
-        // Add user info into each tweet
-        resJson.tweets.push({
-          content: docs[i].content,
-          createdDate: docs[i].createdDate,
-          username: owner[0].username,
-          premium: owner[0].premium,
+        ownerPromise.then((owner) => {
+          // Add user info into each tweet
+          resJson.tweets.push({
+            content: docs[i].content,
+            createdDate: docs[i].createdDate,
+            _id: docs[i]._id,
+            username: owner[0].username,
+            premium: owner[0].premium,
+          });
         });
-      });
+      }
     }
 
     return Promise.all(promises).then(() => res.json(resJson));
@@ -102,9 +107,43 @@ const getAllTweets = async (req, res) => {
   }
 };
 
+const togglePrivacy = async (req, res) => {
+  // check for id in body
+  if (!req.body.id) {
+    return res.status(400).json({error: 'Cannot change privacy without an id'});
+  }
+
+  try {
+    const tweet = {_id: req.body.id};
+
+    // Get current privacy
+    const pubStatus = await Tweet.findOne(tweet).select('public').lean().exec();
+
+    console.log(pubStatus);
+
+    // Send change request to database
+    if (pubStatus.public) {
+      await Tweet.updateOne(tweet, {$set: {public: false}});
+      console.log('updating to false');
+    }
+    else {
+      await Tweet.updateOne(tweet, {$set: {public: true}});
+      console.log('updating to true');
+    }
+    
+    // Return success message
+    return res.json({success: 'Tweet privacy updated'})
+  }
+  catch (err) {
+    console.log(err);
+    return res.status(500).json({error: 'Error while changing privacy'})
+  }
+}
+
 module.exports = {
   writingPage,
   writeTweet,
   getTweets,
   getAllTweets,
+  togglePrivacy,
 };

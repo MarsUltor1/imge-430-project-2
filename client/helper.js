@@ -48,9 +48,20 @@ const formatDate = (date) => {
     return `${day[1]}/${day[2]}/${day[0]} at ${time[0]}:${time[1]}`;
 }
 
+const hideById = (id) => {
+    document.getElementById(id).classList.add('hidden');
+    console.log('element hidden');
+}
+
+const showById = (id) => {
+    document.getElementById(id).classList.remove('hidden');
+}
+
 module.exports = {
     handleError,
     sendPost,
     hideError,
     formatDate,
+    hideById,
+    showById,
 }
