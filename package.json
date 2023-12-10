@@ -1,5 +1,5 @@
 {
-  "name": "domomaker",
+  "name": "twitter",
   "version": "1.0.0",
   "description": "A Simple Login Example using Node.js, Mongo and Redis",
   "main": "./server/app.js",

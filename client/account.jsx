@@ -59,7 +59,7 @@ const AccountInfo = (props) => {
     return(
         <div>
             <h3>Username: {props.account.username}</h3>
-            <h3>User Since: {props.account.date}</h3>
+            <h3>User Since: {helper.formatDate(props.account.date)}</h3>
             <h2>Buy Twitter Premium</h2>
             <button id="buyPremium">$9.99/m</button>
             <hr />

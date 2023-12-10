@@ -100,21 +100,20 @@ const accountPage = (req, res) => res.render('account');
 
 const getInfo = async (req, res) => {
   try {
-    const user = await Account.findOne({_id: req.session.account._id})
+    const user = await Account.findOne({ _id: req.session.account._id })
       .select('username createdDate').lean().exec();
 
     const userInfo = {
       username: user.username,
       date: user.createdDate,
-    }
+    };
 
-    return res.json({info: userInfo});
-  }
-  catch (error) {
+    return res.json({ info: userInfo });
+  } catch (error) {
     console.log(error);
-    return res.status(500).json({error: 'Error while retrieving account info!'})
+    return res.status(500).json({ error: 'Error while retrieving account info!' });
   }
-}
+};
 
 module.exports = {
   loginPage,
