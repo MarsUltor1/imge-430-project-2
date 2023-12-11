@@ -35,33 +35,36 @@ const TweetForm = (props) => {
             method="POST"
             className="tweet-form box"
         >
-            <label className="label">Tweet</label>
+            <label className="label">Tweet:</label>
             <input type="text" id="tweetContent" className="input is-small" placeholer="Tweet Content" />
             <input type="submit" className="button is-small" value="Tweet" />
         </form>
     );
 }
 
+// Send post request to change tweet privacy
 const togglePrivacy = async (id) => {
     helper.hideError();
-    // Send post request to server to change privacy of given tweet
     await helper.sendPost('/togglePrivacy', { id }, () => {
+        // reload tweets and send notification that tweets have changed
         loadTweetsFromServer();
         helper.sendChangeNotification();
     });
     
 }
 
+// Send post request to delete a tweet
 const deleteTweet = async (id) => {
     helper.hideError();
-    // Send delete post reqest to server
     await helper.sendPost('/deleteTweet', {id}, () => {
+        // reload tweets and send notification that tweets have changed
         loadTweetsFromServer();
         helper.sendChangeNotification();
     });
     
 }
 
+// React component to display user's tweets with controls
 const TweetList = (props) => {
     if (props.tweets.length === 0) {
         return (
@@ -133,6 +136,8 @@ const TweetList = (props) => {
     );
 }
 
+// Make a get request for a current user's tweets 
+// and reload the tweets section
 const loadTweetsFromServer = async () => {
     const response = await fetch('/getTweets');
     const data = await response.json();
@@ -147,6 +152,7 @@ const loadTweetsFromServer = async () => {
     );
 }
 
+// React component to display tweets without any controls
 const AllTweetList = (props) => {
     if (props.tweets.length === 0) {
         return (

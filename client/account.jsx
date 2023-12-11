@@ -36,17 +36,19 @@ const PassChangeWindow = (props) => {
             action="/changePassword"
             method="POST"
         >
-            <label htmlFor="oldPass">Current Password: </label>
-            <input type="password" id="oldPass" name="oldPass" placeholder="Current Password" />
-            <label htmlFor="newPass">New Password: </label>
-            <input type="password" id="newPass" name="newPass" placeholder="New Password" />
-            <label htmlFor="newPass2">New Password: </label>
-            <input type="password" id="newPass2" name="newPass2" placeholder="Retype New Password" />
-            <input type="submit" className="formSubmit" value="Change Password" />
+            <label className="label">Current Password:</label>
+            <input type="password" id="oldPass" className="input is-small" placeholder="Current Password" />
+            <label className="label">New Password:</label>
+            <input type="password" id="newPass" className="input is-small" placeholder="New Password" />
+            <label className="label">New Password:</label>
+            <input type="password" id="newPass2" className="input is-small" placeholder="Retype New Password" />
+            <input type="submit" className="formSubmit button is-small" value="Change Password" />
         </form>
     );
 }
 
+
+// React component for account information
 const AccountInfo = (props) => {
     if (!props.account) {
         return (
@@ -58,37 +60,38 @@ const AccountInfo = (props) => {
 
     if (props.account.premium) {
         return (
-            <div>
-                <h3>Username: {props.account.username}</h3>
-                <h3>User Since: {helper.formatDate(props.account.date)}</h3>
-                <div id="premium" className="hidden">
-                    <h2>Buy Twitter Premium</h2>
-                    <button id="buyPremium">$9.99/m</button>
-                </div>
-                <h2 id="premiumOwned">Premium User</h2>
-                <hr />
-                <button id="changePass">Change Password</button>
+            <div className="box">
+                <label className="label first">Username:</label>
+                <p>{props.account.username}</p>
+                <label className="label">User Since:</label>
+                <p>{helper.formatDate(props.account.date)}</p>
+                <label className="label">Premium Status:</label>
+                <p>Subscribed to Premium</p>
+                <button id="cancelPremium" className="button is-small" onClick={cancelPremium}>
+                    Cancel Subscription
+                </button>
             </div>
         )
     }
     else {
         return (
-            <div>
-                <h3>Username: {props.account.username}</h3>
-                <h3>User Since: {helper.formatDate(props.account.date)}</h3>
-                <div id="premium">
-                    <h2>Buy Twitter Premium</h2>
-                    <button id="buyPremium">$9.99/m</button>
-                </div>
-                <h2 id="premiumOwned" className="hidden">Premium User</h2>
-                <hr />
-                <button id="changePass">Change Password</button>
+            <div className="box">
+                <label className="label first">Username:</label>
+                <p>{props.account.username}</p>
+                <label className="label">User Since:</label>
+                <p>{helper.formatDate(props.account.date)}</p>
+                <label className="label">Premium Status:</label>
+                <p>Not Subscribed to Premium</p>
+                <button id="buyPremium" className="button is-small" onClick={makePremium}>
+                    Subscribe for $9.99/m
+                </button>
             </div>
         )
     }
-    
+
 }
 
+// Make get request for user information
 const loadUserInfo = async () => {
     const response = await fetch('/accountInfo');
     const data = await response.json();
@@ -96,36 +99,47 @@ const loadUserInfo = async () => {
         <AccountInfo account={data.info} />,
         document.querySelector('#accountInfo')
     );
-
-    // Don't show password changer until user clicks to change password
-    document.querySelector("#changePass").addEventListener('click', () => {
-        ReactDOM.render(<PassChangeWindow />,
-            document.querySelector('#changePassword'));
-    })
 }
 
+// call renderer on password changing form
+const showPasswordChanger = () => {
+    ReactDOM.render(
+        <PassChangeWindow />,
+        document.querySelector('#changePassword')
+    );
+}
+
+// Send a post request to make user premium
 const makePremium = (e) => {
-    // send post request that with fuction to hide 
-    // buying option if it goes through
     helper.sendPost('/getPremium', {}, () => {
-        helper.hideById('premium');
-        helper.showById('premiumOwned');
+        // re-render account info with updated information
+        loadUserInfo();
         helper.sendChangeNotification();
-    })
+    });
+}
+
+// Send a post request to cancel premium
+const cancelPremium = (e) => {
+    helper.sendPost('/cancelPremium', {}, () => {
+        loadUserInfo();
+        helper.sendChangeNotification();
+    });
 }
 
 const init = async () => {
     // make sure user isn't listening for socket changes of this page
     helper.socket.off('tweetchange');
 
+    // Render out base info screen
     ReactDOM.render(<AccountInfo />,
         document.querySelector('#accountInfo'));
 
-    await loadUserInfo();
+    // Setup functionality for password changing button
+    document.querySelector('#changePassBtn')
+        .addEventListener('click', showPasswordChanger);
 
-    let premiumBtn = document.querySelector('#buyPremium');
-
-    premiumBtn.addEventListener('click', makePremium)
+    // Load in user info
+    loadUserInfo();
 
     return false;
 }

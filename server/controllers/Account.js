@@ -58,6 +58,7 @@ const signup = async (req, res) => {
 
 const changePasswordPage = (req, res) => res.render('changePassword');
 
+// Change user password
 const changePassword = async (req, res) => {
   const oldPass = `${req.body.oldPass}`;
   const newPass = `${req.body.newPass}`;
@@ -88,7 +89,7 @@ const changePassword = async (req, res) => {
       await Account.updateOne(user, { $set: { password: hash } });
 
       // Send user back to maker page
-      return res.json({ redirect: '/tweet' });
+      return res.json({ redirect: '/Account' });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: 'Error while changing password!' });
@@ -98,6 +99,7 @@ const changePassword = async (req, res) => {
 
 const accountPage = (req, res) => res.render('account');
 
+// Return user information
 const getInfo = async (req, res) => {
   try {
     const user = await Account.findOne({ _id: req.session.account._id })
@@ -116,6 +118,7 @@ const getInfo = async (req, res) => {
   }
 };
 
+// Set users premium bool to true
 const makePremium = async (req, res) => {
   try {
     // Change premium boolean in user info
@@ -123,6 +126,21 @@ const makePremium = async (req, res) => {
     await Account.updateOne(user, { $set: { premium: true } });
 
     return res.json({success: 'Premium Purchased'});
+  }
+  catch (err) {
+    console.log(err);
+    return res.status(500).json({error: 'Error while updating premium status'})
+  }
+}
+
+// Set users premium bool to false
+const cancelPremium = async (req, res) => {
+  try {
+    // Change premium boolean in user info
+    const user = { _id: req.session.account._id };
+    await Account.updateOne(user, { $set: { premium: false } });
+
+    return res.json({success: 'Premium Canceled'});
   }
   catch (err) {
     console.log(err);
@@ -140,4 +158,5 @@ module.exports = {
   accountPage,
   getInfo,
   makePremium,
+  cancelPremium,
 };

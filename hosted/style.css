@@ -14,16 +14,15 @@ i {
   color: #1E3088;
 }
 
-.nav-button {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  align-content: center;
-  padding: 0px;
+label:not(.first) {
+  margin-top: 1.5em;
 }
-.nav-button a {
-  display: block;
-  width: 90%;
-  text-align: right;
-  border-bottom: 2px solid #1E3088;
+
+.button:not(.first) {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+form {
+  margin-bottom: 0;
 }

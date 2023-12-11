@@ -19,6 +19,7 @@ const router = (app) => {
   app.get('/accountInfo', mid.requiresLogin, controllers.Account.getInfo);
 
   app.post('/getPremium', mid.requiresLogin, controllers.Account.makePremium);
+  app.post('/cancelPremium', mid.requiresLogin, controllers.Account.cancelPremium);
 
   app.get('/tweet', mid.requiresLogin, controllers.Tweet.writingPage);
   app.post('/tweet', mid.requiresLogin, controllers.Tweet.writeTweet);
@@ -27,6 +28,7 @@ const router = (app) => {
   app.post('/deleteTweet', mid.requiresLogin, controllers.Tweet.deleteTweet);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('/*', controllers.get404);
 };
 
 module.exports = router;
