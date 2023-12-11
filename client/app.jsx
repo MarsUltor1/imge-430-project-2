@@ -42,20 +42,20 @@ const TweetForm = (props) => {
     );
 }
 
-const togglePrivacy = async (e) => {
+const togglePrivacy = async (id) => {
     helper.hideError();
     // Send post request to server to change privacy of given tweet
-    await helper.sendPost('/togglePrivacy', { id: e.target.id }, () => {
+    await helper.sendPost('/togglePrivacy', { id }, () => {
         loadTweetsFromServer();
         helper.sendChangeNotification();
     });
     
 }
 
-const deleteTweet = async (e) => {
+const deleteTweet = async (id) => {
     helper.hideError();
     // Send delete post reqest to server
-    await helper.sendPost('/deleteTweet', {id: e.target.id}, () => {
+    await helper.sendPost('/deleteTweet', {id}, () => {
         loadTweetsFromServer();
         helper.sendChangeNotification();
     });
@@ -84,13 +84,13 @@ const TweetList = (props) => {
                     </p>
                     <nav className="field has-addons">
                         <p class="control">
-                            <button className="button is-small" id="privacyBtn">
-                                <span id={tweet._id}>{tweet.public ? 'Make Private' : 'Make Public'}</span>
+                            <button className="button is-small" id="privacyBtn" onClick={() => togglePrivacy(tweet._id)}>
+                                <span>{tweet.public ? 'Make Private' : 'Make Public'}</span>
                             </button>
                         </p>
                         <p class="control">
-                            <button className="button is-small" id="deleteBtn">
-                                <span id={tweet._id}>Delete</span>
+                            <button className="button is-small" id="deleteBtn" onClick={() => deleteTweet(tweet._id)}>
+                                <span>Delete</span>
                             </button>
                         </p>
                     </nav>
@@ -108,13 +108,13 @@ const TweetList = (props) => {
                     </p>
                     <nav className="field has-addons">
                         <p class="control">
-                            <button className="button is-small" id="privacyBtn">
-                                <span id={tweet._id}>{tweet.public ? 'Make Private' : 'Make Public'}</span>
+                            <button className="button is-small" id="privacyBtn" onClick={() => togglePrivacy(tweet._id)}>
+                                <span >{tweet.public ? 'Make Private' : 'Make Public'}</span>
                             </button>
                         </p>
                         <p class="control">
-                            <button className="button is-small" id="deleteBtn" value={tweet._id}>
-                                <span id={tweet._id}>Delete</span>
+                            <button className="button is-small" id="deleteBtn" onClick={() => deleteTweet(tweet._id)}>
+                                <span>Delete</span>
                             </button>
                         </p>
                     </nav>
@@ -145,28 +145,6 @@ const loadTweetsFromServer = async () => {
         <TweetList tweets={data.tweets} />,
         document.querySelector('#tweets')
     );
-
-    // Setup all privacy buttons
-    const privacyBtns = document.querySelectorAll('#privacyBtn');
-
-    privacyBtns.forEach((btn) => {
-        // Remove any old event listeners that may or may not exist
-        btn.removeEventListener('click', togglePrivacy);
-
-        // Setup event listener to toggle the privacy
-        btn.addEventListener('click', togglePrivacy);
-    })
-
-    // Setup all delete buttons
-    const deleteBtns = document.querySelectorAll('#deleteBtn');
-
-    deleteBtns.forEach((btn) => {
-        //remove old event listener
-        btn.removeEventListener('click', deleteTweet);
-
-        // Add new event listener
-        btn.addEventListener('click', deleteTweet);
-    })
 }
 
 const AllTweetList = (props) => {
