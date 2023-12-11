@@ -18,7 +18,7 @@ const TweetSchema = new mongoose.Schema({
   public: {
     type: Boolean,
     default: false,
-  }
+  },
 });
 
 TweetSchema.statics.toAPI = (doc) => ({

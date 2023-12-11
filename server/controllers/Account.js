@@ -125,13 +125,12 @@ const makePremium = async (req, res) => {
     const user = { _id: req.session.account._id };
     await Account.updateOne(user, { $set: { premium: true } });
 
-    return res.json({success: 'Premium Purchased'});
-  }
-  catch (err) {
+    return res.json({ success: 'Premium Purchased' });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json({error: 'Error while updating premium status'})
+    return res.status(500).json({ error: 'Error while updating premium status' });
   }
-}
+};
 
 // Set users premium bool to false
 const cancelPremium = async (req, res) => {
@@ -140,13 +139,12 @@ const cancelPremium = async (req, res) => {
     const user = { _id: req.session.account._id };
     await Account.updateOne(user, { $set: { premium: false } });
 
-    return res.json({success: 'Premium Canceled'});
-  }
-  catch (err) {
+    return res.json({ success: 'Premium Canceled' });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json({error: 'Error while updating premium status'})
+    return res.status(500).json({ error: 'Error while updating premium status' });
   }
-}
+};
 
 module.exports = {
   loginPage,

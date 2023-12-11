@@ -110,52 +110,49 @@ const getAllTweets = async (req, res) => {
 const togglePrivacy = async (req, res) => {
   // check for id in body
   if (!req.body.id) {
-    return res.status(400).json({error: 'Cannot change privacy without an id'});
+    return res.status(400).json({ error: 'Cannot change privacy without an id' });
   }
 
   try {
-    const tweet = {_id: req.body.id};
+    const tweet = { _id: req.body.id };
 
     // Get current privacy
     const pubStatus = await Tweet.findOne(tweet).select('public').lean().exec();
 
     // Send change request to database
     if (pubStatus.public) {
-      await Tweet.updateOne(tweet, {$set: {public: false}});
+      await Tweet.updateOne(tweet, { $set: { public: false } });
+    } else {
+      await Tweet.updateOne(tweet, { $set: { public: true } });
     }
-    else {
-      await Tweet.updateOne(tweet, {$set: {public: true}});
-    }
-    
+
     // Return success message
-    return res.json({success: 'Tweet privacy updated'})
-  }
-  catch (err) {
+    return res.json({ success: 'Tweet privacy updated' });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json({error: 'Error while changing privacy'})
+    return res.status(500).json({ error: 'Error while changing privacy' });
   }
-}
+};
 
 const deleteTweet = async (req, res) => {
   // check for id in body
   if (!req.body.id) {
-    return res.status(400).json({error: 'Cannot change privacy without an id'})
+    return res.status(400).json({ error: 'Cannot change privacy without an id' });
   }
 
   try {
-    const tweet = {_id: req.body.id};
+    const tweet = { _id: req.body.id };
 
     // send delete request to database
     await Tweet.deleteOne(tweet).exec();
 
     // send status to user
-    return res.json({success: 'Tweet deleted successfully'});
-  }
-  catch (err) {
+    return res.json({ success: 'Tweet deleted successfully' });
+  } catch (err) {
     console.log(err);
-    return res.status(500).json({error: 'Error while deleting tweet'});
+    return res.status(500).json({ error: 'Error while deleting tweet' });
   }
-}
+};
 
 module.exports = {
   writingPage,
