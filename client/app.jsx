@@ -255,9 +255,15 @@ const init = async () => {
     const myTweetsBtn = document.querySelector('#myTweetsBtn');
     const allTweetsBtn = document.querySelector('#allTweetsBtn');
 
+    myTweetsBtn.classList.add('is-active')
+
     myTweetsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         loadTweetsFromServer();
+
+        // Change active button
+        allTweetsBtn.classList.remove('is-active');
+        myTweetsBtn.classList.add('is-active');
 
         // stop listening for socket changes
         helper.socket.off('tweet change');
@@ -267,6 +273,10 @@ const init = async () => {
     allTweetsBtn.addEventListener('click', (e) => {
         e.preventDefault();
         loadAllTweetsFromServer();
+
+        // Change active button
+        myTweetsBtn.classList.remove('is-active');
+        allTweetsBtn.classList.add('is-active');
 
         // start listening for socket changes
         helper.socket.on('tweet change', loadAllTweetsFromServer);
