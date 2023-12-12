@@ -12,7 +12,6 @@ const router = (app) => {
 
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
 
-  app.get('/changePassword', mid.requiresLogin, controllers.Account.changePasswordPage);
   app.post('/changePassword', mid.requiresLogin, mid.requiresSecure, controllers.Account.changePassword);
 
   app.get('/account', mid.requiresLogin, controllers.Account.accountPage);

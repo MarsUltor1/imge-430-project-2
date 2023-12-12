@@ -56,8 +56,6 @@ const signup = async (req, res) => {
   }
 };
 
-const changePasswordPage = (req, res) => res.render('changePassword');
-
 // Change user password
 const changePassword = async (req, res) => {
   const oldPass = `${req.body.oldPass}`;
