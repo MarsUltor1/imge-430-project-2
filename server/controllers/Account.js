@@ -149,7 +149,6 @@ module.exports = {
   login,
   logout,
   signup,
-  changePasswordPage,
   changePassword,
   accountPage,
   getInfo,
